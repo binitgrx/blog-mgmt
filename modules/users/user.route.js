@@ -2,12 +2,13 @@ const router = require("express").Router();
 const userController = require("./user.controller");
 const { upload } = require("../../utils/multer");
 const {registerSchema,registerValidation} = require("./user.validation")
+const {secureAPI} = require("../../utils/secure")
 
 
 // Corrected the parameter order: (req, res, next)
-router.get("/", (req, res, next) => {
+router.get("/", secureAPI(["admin"]),(req, res, next) => {
   try {
-    res.json({ data: null, msg: "API is working" });
+    res.json({ data: null, msg: "user list generated succesfully" });
   } catch (e) {
     next(e);
   }

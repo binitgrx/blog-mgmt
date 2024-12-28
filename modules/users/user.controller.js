@@ -6,7 +6,11 @@ const {
 } = require("../../utils/bcrypt");
 const { sendMail } = require("../../services/mailer");
 const { compare } = require("bcryptjs");
-const { generateRandomToken } = require("../../utils/token");
+const {
+  generateRandomToken,
+  generateJWT,
+  verifyJWT,
+} = require("../../utils/token");
 const { token } = require("morgan");
 
 const register = async (payload) => {
@@ -41,7 +45,13 @@ const login = async (payload) => {
   }
   const PWmatch = comparePassword(password, user?.password);
   if (!PWmatch) throw new Error("email or password missmatched");
-  return "logged in";
+  //token generation
+  const accessToken=generateJWT(payload);
+  
+  const {name,email:userEmail} = user;
+  const userInfo = {name , email:userEmail,accessToken} ;
+  return userInfo;  
+  
 };
 const verifyEmail = async (payload) => {
   const { email, token } = payload;
@@ -53,8 +63,8 @@ const verifyEmail = async (payload) => {
     { email },
     { token: "", isEmailVerified: true }
   );
-  if(!updateUser) throw new Error("cannot proceed. try again");
-  return "Email verification completed"
+  if (!updateUser) throw new Error("cannot proceed. try again");
+  return "Email verification completed";
 };
 
 module.exports = { register, login, verifyEmail };

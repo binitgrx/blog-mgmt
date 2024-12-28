@@ -16,7 +16,7 @@ const registerSchema = Joi.object({
   password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")).required(),
 })
 
-const registerValidation = (req, res, next) => {
+const registerValidation = async (req, res, next) => {
   const { error } = registerSchema.validate(req.body);
   if (error) {
     const { details = [] } = error;
@@ -25,7 +25,7 @@ const registerValidation = (req, res, next) => {
     const err = message || error;
     next(err);
   }
-  const userExists = userModel.findOne({email:req.body.email}).select("-password -roles");
+  const userExists = await userModel.findOne({email:req.body.email}).select("-password -roles");
   if(userExists) next(new Error("user already exist"));
 
   next();
