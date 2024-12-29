@@ -17,11 +17,14 @@ const secureAPI = (sysRole = []) => {
       });
       if (!user) throw new Error("user not found");
       if (sysRole.length == 0) {
+        req.currentUser = user?._id
         next();
       } else {
         const isValidRole = sysRole.some((role) => user?.roles.includes(role));
         if (!isValidRole) throw new Error("user unathorized");
-        next();
+      
+        req.currentUser = user?._id 
+       next();
       }
     } catch (e) {
       next(e);

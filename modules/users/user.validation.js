@@ -15,6 +15,25 @@ const registerSchema = Joi.object({
     .required(),
   password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")).required(),
 })
+const forgetPasswordSchema = Joi.object({
+  email: Joi.string()
+    .email({
+      minDomainSegments: 1,
+      tlds: { allow: ["com"] },
+    })
+    .required(),
+})
+const verifyForgetPasswordSchema = Joi.object({
+  email: Joi.string()
+    .email({
+      minDomainSegments: 1,
+      tlds: { allow: ["com"] },
+    })
+    .required(),
+    password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")).required(),
+    token:Joi.number().less(999999).greater(100000).required()
+})
+
 
 const registerValidation = async (req, res, next) => {
   const { error } = registerSchema.validate(req.body);
@@ -30,5 +49,29 @@ const registerValidation = async (req, res, next) => {
 
   next();
 };
+const FPValidation = async (req, res, next) => {
+  const { error } = forgetPasswordSchema.validate(req.body);
+  if (error) {
+    const { details = [] } = error;
+    const [a = {} ] = details;
+    const { message = null } = a;
+    const err = message || error;
+    next(err);
+  }
+  
+  next();
+};
+const verifyFPValidation = async (req, res, next) => {
+  const { error } = verifyForgetPasswordSchema.validate(req.body);
+  if (error) {
+    const { details = [] } = error;
+    const [a = {} ] = details;
+    const { message = null } = a;
+    const err = message || error;
+    next(err);
+  }
+  
+  next();
+};
 
-module.exports = { registerSchema, registerValidation };
+module.exports = { registerSchema, registerValidation,FPValidation,verifyFPValidation };
