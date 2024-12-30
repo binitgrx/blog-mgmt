@@ -22,8 +22,7 @@ const secureAPI = (sysRole = []) => {
       } else {
         const isValidRole = sysRole.some((role) => user?.roles.includes(role));
         if (!isValidRole) throw new Error("user unathorized");
-      
-        req.currentUser = user?._id 
+        req.currentUser = user?._id
        next();
       }
     } catch (e) {

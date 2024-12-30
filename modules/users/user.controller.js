@@ -115,10 +115,9 @@ const verifyFPToken = async (payload) => {
 
 const changePassword = async (request) => {
   const { currentUser, body } = request;
-  console.log(currentUser,body);
+  console.log(currentUser, body);
 
-  const user = await userModel.findById(
-    currentUser);
+  const user = await userModel.findById(currentUser);
 
   if (!user) throw new Error("user not found");
 
@@ -131,15 +130,53 @@ const changePassword = async (request) => {
     { _id: currentUser },
     { password: newHashedPw }
   );
-  if(!res) throw new Error ("something went wrong");
+  if (!res) throw new Error("something went wrong");
   return true;
 };
 
+const blockUser = async (id) => {
+  const user = await userModel.findOne({ _id: id });
+  if (!user) throw new Error("user not found");
+  const currentStatus = user.isActive;
+  console.log(user);
+  const updatedUser = await userModel.updateOne(
+    { _id: user?.id },
+    { isActive: !currentStatus }
+  );
+  if (!updatedUser.acknowledged) throw new Error("something went wrong");
+  return true;
+};
+
+const getById = async (id) => {
+  return await userModel.findById({ _id: id }).select("-password");
+};
+const getProfile = async (currentUser) => {
+  return await userModel.findOne({ _id: currentUser });
+};
+
+const list = async () => {
+  return await userModel.find().select("-password -token");
+};
+
+const updateRole = async (id, payload) => {
+  const user = await userModel.findOne({ _id: id });
+  if (!user) throw new Error("user not found");
+  const { roles } = payload;
+  const newRoles = [...roles];
+  if (newRoles.length == 0) throw new Error("roles cant be empty");
+  await userModel.updateOne({ _id: user?.id }, { roles: newRoles });
+};
+
 module.exports = {
+  updateRole,
   register,
   login,
+  getById,
+  getProfile,
+  list,
   verifyEmail,
   generateFPToken,
   verifyFPToken,
   changePassword,
+  blockUser,
 };

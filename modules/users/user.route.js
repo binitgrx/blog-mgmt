@@ -1,4 +1,5 @@
 const router = require("express").Router();
+
 const userController = require("./user.controller");
 const { upload } = require("../../utils/multer");
 const {
@@ -8,14 +9,6 @@ const {
   verifyFPValidation,
 } = require("./user.validation");
 const { secureAPI } = require("../../utils/secure");
-
-router.get("/", secureAPI(["admin"]), (req, res, next) => {
-  try {
-    res.json({ data: null, msg: "user list generated succesfully" });
-  } catch (e) {
-    next(e);
-  }
-});
 
 router.post(
   "/register",
@@ -71,13 +64,61 @@ router.post("/verify-fp", verifyFPValidation, async (req, res, next) => {
   }
 });
 
-router.put("/change-password", secureAPI(["user","admin"]), async (req, res, next) => {
+router.put(
+  "/change-password",
+  secureAPI(["user", "admin"]),
+  async (req, res, next) => {
+    try {
+      await userController.changePassword(req);
+      res.json({ data: null, msg: "password changed sucessfully" });
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+router.get("/", secureAPI(["admin"]), async (req, res, next) => {
   try {
-    await userController.changePassword(req);
-    res.json({ data: null, msg: "password changed sucessfully" });
+    const result = await userController.list();
+    res.json({ data: result, msg: "user data listed successfully" });
+  } catch (e) {
+    next(e);
+  }
+});
+router.get("/profile", secureAPI(["admin", "user"]), async (req, res, next) => {
+  try {
+    const result = await userController.getProfile(req.currentUser);
+    res.json({ data: result, msg: "profile generated successfully" });
+  } catch (e) {
+    next(e);
+  }
+});
+router.patch("/:id/block", secureAPI(["admin"]), async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    await userController.blockUser(id);
+    res.json({ data: null, msg: "user status changed successfully " });
   } catch (e) {
     next(e);
   }
 });
 
+router.get("/:id", secureAPI(["user"]), async (req, res, next) => {
+  try {
+    const result = await userController.getById(req.params.id);
+    res.json({ data: result, msg: "user data listed successfully" });
+  } catch (e) {
+    next(e);
+  }
+});
+
+router.patch("/:id/roles", secureAPI(["admin"]), async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    await userController.updateRole(id, req.body);
+    res.json({ data: null, msg: " user status updated successfully " });
+  } catch (e) {
+    next(e);
+  }
+});
 module.exports = router;
