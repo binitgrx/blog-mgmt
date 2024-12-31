@@ -79,7 +79,9 @@ router.put(
 
 router.get("/", secureAPI(["admin"]), async (req, res, next) => {
   try {
-    const result = await userController.list();
+    const {name,page,limit,roles} = req.query;
+    const search = {name,roles};
+    const result = await userController.list(search,page,limit);
     res.json({ data: result, msg: "user data listed successfully" });
   } catch (e) {
     next(e);

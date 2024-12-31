@@ -13,7 +13,7 @@ const {
 } = require("../../utils/token");
 const { token } = require("morgan");
 const { string } = require("joi");
-const { use } = require("./user.route");
+const { use, search } = require("./user.route");
 
 const register = async (payload) => {
   const { role, password, ...rest } = payload;
@@ -154,8 +154,58 @@ const getProfile = async (currentUser) => {
   return await userModel.findOne({ _id: currentUser });
 };
 
-const list = async () => {
-  return await userModel.find().select("-password -token");
+const list = async (search,page=1,limit=10) => {
+  const query = [];
+  if (search?.name) {
+    query.push({
+      $match: {
+        name: new RegExp(search?.name, "gi"),
+      },
+    });
+  }
+  if(search?.roles){
+    query.push({
+      '$match': {
+        'roles': search?.roles
+      }
+    })
+  }
+  query.push({
+    '$facet': {
+      'metadata': [
+        {
+          '$count': 'total'
+        }
+      ], 
+      'data': [
+        {
+          '$skip': (+page - 1) * +limit
+        }, {
+          '$limit': +limit
+        }
+      ]
+    }
+  }, {
+    '$addFields': {
+      'total': {
+        '$arrayElemAt': [
+          '$metadata.total', 0
+        ]
+      }
+    }
+  }, {
+    '$project': {
+      'data.password': 0
+    }
+  })
+  const result= await userModel.aggregate(query);
+  return{
+    total:result[0]?.total || 0,
+    totalPages :Math.ceil(result[0]?.data.length/limit),
+    data:result[0]?.data,
+    page:+page,
+    limit : +limit
+  }
 };
 
 const updateRole = async (id, payload) => {
