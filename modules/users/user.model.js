@@ -14,6 +14,7 @@ const userSchema = new Schema(
       default: "user",
       required: true,
     },
+    bio:{type:String},
     isEmailVerified: { type: Boolean, default: false },
     isActive: { type: Boolean, default: true },
     image: { type: String },

@@ -1,7 +1,8 @@
 const router = require("express").Router();
 
 const userController = require("./user.controller");
-const { upload } = require("../../utils/multer");
+const { upload ,storage } = require("../../utils/multer");
+const newUpload = upload(storage());
 const {
   registerSchema,
   registerValidation,
@@ -12,7 +13,7 @@ const { secureAPI } = require("../../utils/secure");
 
 router.post(
   "/register",
-  upload.single("image"),
+  newUpload.single("image"),
   registerValidation,
   async (req, res, next) => {
     try {
