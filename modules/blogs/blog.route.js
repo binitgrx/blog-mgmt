@@ -70,6 +70,17 @@ router.get("/:slug", async (req, res, next) => {
   }
 });
 
+router.patch("/:slug", secureAPI(["admin", "user"]), async (req, res, next) => {
+  try {
+    const result = await blogController.updateStatusBySlug(req.params.slug);
+    res.json({
+      data: result,
+      msg: "Blog status updated successfully",
+    });
+  } catch (e) {
+    next(e);
+  }
+});
 router.put(
   "/:slug",
   secureAPI(["admin", "user"]),
@@ -93,25 +104,13 @@ router.put(
     }
   }
 );
-
-router.patch("/:slug", secureAPI(["admin", "user"]), async (req, res, next) => {
-  try {
-    const result = await blogController.updateStatusBySlug(req.params.slug);
-    res.json({
-      data: result,
-      msg: "Blog status updated successfully",
-    });
-  } catch (e) {
-    next(e);
-  }
-});
-
 router.delete(
   "/:slug",
   secureAPI(["admin", "user"]),
   async (req, res, next) => {
     try {
       const owner = req.currentUser;
+      // console.log(req.params.slug);
       const result = await blogController.removeBySlug(req.params.slug, owner);
       res.json({
         data: result,
