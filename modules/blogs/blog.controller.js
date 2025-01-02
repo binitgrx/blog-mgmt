@@ -195,7 +195,7 @@ const removeBySlug = async (slug, owner) => {
   const blog = await blogModel.findOne({ slug });
   if (!blog) throw new Error("Blog not found");
   const user = await userModel.findOne({ _id: owner });
-  if (blog?.author.toString() !== owner.toString() && !user.roles.includes("admin")) {
+  if (blog?.author.toString() !== owner.toString() || !!user.roles.includes("admin")) {
     throw new Error("User unauthorized for deleteing ");
   }
   return blogModel.deleteOne({ slug });
