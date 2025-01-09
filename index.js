@@ -2,6 +2,7 @@ require("dotenv").config()
 const express =require("express")
 const morgan =require("morgan")
 const mongoose =require("mongoose");
+const cors = require("cors");
 
 const app = express();
 const indexRouter = require("./routes/index")
@@ -16,7 +17,7 @@ mongoose
     console.log("database connection is failed",e.toString());
   });
 
-
+app.use(cors());
 app.use(morgan("tiny"));
 app.use(express.json());
 app.use("/resources",express.static("public"));
