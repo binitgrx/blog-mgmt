@@ -1,0 +1,32 @@
+// Import bootstrap after overriding the variables
+$custom: #ff9f39;
+$primary: #0d6efd;
+$secondary: #626567;
+$success: #198754;
+$danger: #dc3644;
+$warning: #ffc107;
+$info: #0dcaf0;
+$light: #f9f9fb;
+$dark: #21242b;
+
+// Add custom color to bootstrap theme color
+$theme-colors: (
+  "primary": $primary,
+  "secondary": $secondary,
+  "success": $success,
+  "danger": $danger,
+  "warning": $warning,
+  "info": $info,
+  "light": $light,
+  "dark": $dark,
+);
+
+// Create your own map
+$custom-colors: (
+  "custom": $custom,
+);
+
+// Merge the maps
+$theme-colors: map-merge($theme-colors, $custom-colors);
+
+@import "../node_modules/bootstrap/scss/bootstrap";
