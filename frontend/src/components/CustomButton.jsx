@@ -1,20 +1,19 @@
-import { Button, Spinner } from "react-bootstrap";
 import { memo } from "react";
+import { Button, Spinner } from "react-bootstrap";
 import PropTypes from "prop-types";
 
 const CustomButton = memo(
   ({
     variant = "success",
     label = "Label",
-    disable = false,
+    disabled = false,
     loading = false,
+    onClick,
   }) => {
     return (
-      <Button variant={variant} disabled={disable} onClick={() => onclick()}>
-        {loading && (
-          <Spinner animation="border" variant="light" size="sm"></Spinner>
-        )}
-        &nbsp;{label}
+      <Button variant={variant} disabled={disabled} onClick={() => onClick()}>
+        {loading && <Spinner animation="border" variant="light" size="sm" />}
+        &nbsp;<span className="text-white">{label}</span>
       </Button>
     );
   }
@@ -24,6 +23,9 @@ CustomButton.displayName = "CustomButton";
 CustomButton.propTypes = {
   variant: PropTypes.string,
   label: PropTypes.string,
-  disable: PropTypes.bool,
+  disabled: PropTypes.bool,
+  loading: PropTypes.bool,
+  onClick: PropTypes.func,
 };
+
 export default CustomButton;

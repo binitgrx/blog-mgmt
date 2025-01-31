@@ -4,7 +4,7 @@ import AppLayout from "./layouts/AppLayout";
 
 import ErrorPage from "./pages/Error";
 import Home from "./pages/Home";
-import Login from "./pages/auth/Login";
+import Login from "./pages/auth/login";
 import Register from "./pages/auth/Register";
 import UserEdit from "./pages/admin/users/Edit";
 import UserList from "./pages/admin/users/List";
@@ -18,6 +18,7 @@ const App = () => {
         <Route index element={<Home />} />
         <Route path="/auth">
           <Route index element={<Login />} />
+          <Route path="forget-password" element={<Login />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
         </Route>
