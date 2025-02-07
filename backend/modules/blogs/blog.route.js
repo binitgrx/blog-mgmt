@@ -6,6 +6,17 @@ const { upload, storage } = require("../../utils/multer");
 
 const blogUpload = upload(storage("public/blogs"));
 
+router.get("/published", async (req, res, next) => {
+  try {
+    const { title, page, limit } = req.query;
+    const search = { title };
+    const result = await blogController.getAllBlogs({ search, page, limit });
+    res.json({ data: result, msg: "Blog list generated successfully" });
+  } catch (e) {
+    next(e);
+  }
+});
+
 router.get("/", secureAPI(["admin"]), async (req, res, next) => {
   try {
     const { title, status, page, limit } = req.query;
@@ -70,21 +81,10 @@ router.get("/:slug", async (req, res, next) => {
   }
 });
 
-router.patch("/:slug", secureAPI(["admin", "user"]), async (req, res, next) => {
-  try {
-    const result = await blogController.updateStatusBySlug(req.params.slug);
-    res.json({
-      data: result,
-      msg: "Blog status updated successfully",
-    });
-  } catch (e) {
-    next(e);
-  }
-});
 router.put(
   "/:slug",
-  secureAPI(["admin", "user"]),
   blogUpload.single("image"),
+  secureAPI(["admin", "user"]),
   async (req, res, next) => {
     try {
       if (req.file) {
@@ -104,13 +104,25 @@ router.put(
     }
   }
 );
+
+router.patch("/:slug", secureAPI(["admin", "user"]), async (req, res, next) => {
+  try {
+    const result = await blogController.updateStatusBySlug(req.params.slug);
+    res.json({
+      data: result,
+      msg: "Blog status updated successfully",
+    });
+  } catch (e) {
+    next(e);
+  }
+});
+
 router.delete(
   "/:slug",
   secureAPI(["admin", "user"]),
   async (req, res, next) => {
     try {
       const owner = req.currentUser;
-      // console.log(req.params.slug);
       const result = await blogController.removeBySlug(req.params.slug, owner);
       res.json({
         data: result,

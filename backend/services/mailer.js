@@ -1,23 +1,31 @@
 const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
-  service: process.env.SMTP_SERVICES,
-  secure: false, // true for port 465, false for other ports
+  service: process.env.SMTP_SERVICE,
+  secure: false,
   auth: {
-    user: process.env.SMTP_USERNAME,
+    user: process.env.SMTP_EMAIL,
     pass: process.env.SMTP_PASSWORD,
   },
 });
 
-// async..await is not allowed in global scope, must use a wrapper
+transporter.verify(function (error, success) {
+  if (error) {
+    console.log(error.toString());
+  } else {
+    console.log("Email Server is ready to take our messages");
+  }
+});
+
 const sendMail = async ({ to, subject, message }) => {
+  // send mail with defined transport object
   const info = await transporter.sendMail({
-    from: `"BlogQuill" <${process.env.SMTP_USERNAME}>`, // sender address
-    to, // list of receivers
-    subject, // Subject line
-    html: message, // html body
+    from: `"BlogQuill" <${process.env.SMTP_EMAIL}>`,
+    to,
+    subject,
+    html: message,
   });
   return info?.messageId;
 };
 
-module.exports ={sendMail}
+module.exports = { sendMail };
