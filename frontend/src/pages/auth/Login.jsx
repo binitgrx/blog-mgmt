@@ -1,47 +1,14 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
-
 import AlertBox from "../../components/AlertBox";
 import CustomButton from "../../components/CustomButton";
-
-import errorParser from "../../utils/errorParser";
-import instance from "../../utils/axios";
-import { URLS } from "../../constants";
-import { setItem, setToken } from "../../utils/session";
+import { useLogin } from "../../hooks/uselogin";
 
 const Login = () => {
-  const navigate = useNavigate();
   const [payload, setPayload] = useState({ email: "", password: "" });
-  const [isDisabled, setIsDisabled] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [msg, setMsg] = useState("");
-  const [err, setErr] = useState("");
-
-  const handleSubmit = async () => {
-    try {
-      setIsLoading(true);
-      setIsDisabled(true);
-      setErr("");
-      const { data } = await instance.post(URLS.LOGIN, payload);
-      setToken(data.data.accessToken);
-      setItem(
-        "currentUser",
-        JSON.stringify({ name: data?.data?.name, email: data?.data?.email })
-      );
-      setMsg(data?.msg);
-      setTimeout(() => {
-        setMsg("");
-        navigate("/admin");
-      }, 2000);
-    } catch (e) {
-      const err = e?.response?.data?.msg || "Something went wrong!";
-      setErr(errorParser(err));
-    } finally {
-      setPayload({ email: "", password: "" });
-      setIsLoading(false);
-      setIsDisabled(false);
-    }
-  };
+  const { err, msg, handleSubmit, isDisabled, isLoading } = useLogin({
+    setPayload,
+  });
 
   return (
     <div
@@ -109,7 +76,7 @@ const Login = () => {
                   label="Submit"
                   loading={isLoading}
                   disabled={isDisabled}
-                  onClick={() => handleSubmit()}
+                  onClick={() => handleSubmit({ payload })}
                 />
               </div>
             </form>

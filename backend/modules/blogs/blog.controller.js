@@ -20,6 +20,12 @@ const getBySlug = (slug) => {
     .populate({ path: "author", select: "name email bio" });
 };
 
+const getById = (id) => {
+  return blogModel
+    .findOne({ _id: id })
+    .populate({ path: "author", select: "name email bio" });
+};
+
 const list = async ({ search, page = 1, limit = 10 }) => {
   const query = []; // pipeline
   // Search
@@ -275,13 +281,13 @@ const getAllMyBlogs = async ({ id, search, page = 1, limit = 10 }) => {
 };
 
 const removeBySlug = async (slug, owner) => {
+  console.log(slug, owner);
   const blog = await blogModel.findOne({ slug });
   if (!blog) throw new Error("Blog not found");
   const user = await userModel.findOne({ _id: owner });
-  if (
-    blog?.author.toString() !== owner.toString() ||
-    !!user?.roles.includes("admin")
-  ) {
+  const isOwner = blog?.author.toString() === owner.toString();
+  const isAdmin = user?.roles.includes("admin");
+  if (!isOwner || !isAdmin) {
     throw new Error("User unauthorized");
   }
   return blogModel.deleteOne({ slug });
@@ -303,13 +309,18 @@ const updateStatusBySlug = async (slug) => {
   const existingBlog = await blogModel.findOne({ slug });
   if (!existingBlog) throw new Error("Blog not found");
   const newStatus = existingBlog?.status === "draft" ? "published" : "draft";
-  return blogModel.findOneAndUpdate({ slug }, { status: newStatus });
+  return blogModel.findOneAndUpdate(
+    { slug },
+    { status: newStatus },
+    { new: true }
+  );
 };
 
 module.exports = {
   create,
   getAllBlogs,
   getAllMyBlogs,
+  getById,
   getBySlug,
   list,
   removeBySlug,
