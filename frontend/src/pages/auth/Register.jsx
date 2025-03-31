@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { Button, Form } from "react-bootstrap";
 
-import  instance  from "../../utils/axios";
+import { instance } from "../../utils/axios";
 import { URLS } from "../../constants";
 import errorParser from "../../utils/errorParser";
 

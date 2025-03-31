@@ -14,7 +14,7 @@ const storage = (storageLocation = "") => {
   });
 };
 
-const upload = (storage, fileSize = 1000000) => {
+const upload = (storage, fileSize = 5000000) => {
   return multer({
     storage: storage,
     limits: {

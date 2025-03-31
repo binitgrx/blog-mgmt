@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 import { URLS } from "../../constants";
-import  instance  from "../../utils/axios";
+import { instance } from "../../utils/axios";
 import errorParser from "../../utils/errorParser";
 
 import AlertBox from "../../components/AlertBox";

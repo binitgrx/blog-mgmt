@@ -1,0 +1,58 @@
+.app {
+    background-color: #f8f9fa;
+  }
+  
+  .hero-section {
+    background-color: #e9ecef;
+  }
+  
+  .navbar .nav-link {
+    color: rgba(0, 0, 0, 0.7) !important;
+    font-size: 0.9rem;
+  }
+  
+  .navbar .nav-link:hover {
+    color: rgba(0, 0, 0, 1) !important;
+  }
+  
+  .template-link {
+    position: relative;
+  }
+  
+  .docs-badge {
+    background: #7952b3;
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-left: 5px;
+  }
+  
+  article {
+    transition: all 0.2s;
+  }
+  
+  article:hover {
+    transform: translateY(-2px);
+  }
+  
+  .display-4 {
+    font-size: 2.5rem;
+  }
+  
+  @media (min-width: 992px) {
+    .display-4 {
+      font-size: 3.5rem;
+    }
+  }
+  
+  .btn-dark {
+    background-color: #212529;
+    border-color: #212529;
+  }
+  
+  .btn-dark:hover {
+    background-color: #1a1e21;
+    border-color: #1a1e21;
+  }
+  

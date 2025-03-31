@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import errorParser from "../utils/errorParser";
-import instance from "../utils/axios";
+import { instance } from "../utils/axios";
 import { URLS } from "../constants";
 import { setItem, setToken } from "../utils/session";
 

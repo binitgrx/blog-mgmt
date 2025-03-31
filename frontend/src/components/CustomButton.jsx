@@ -29,3 +29,5 @@ CustomButton.propTypes = {
 };
 
 export default CustomButton;
+export { CustomButton };
+// export default memo(CustomButton);

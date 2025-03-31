@@ -12,6 +12,11 @@ import UserList from "./pages/admin/users/List";
 import ForgetPassword from "./pages/auth/ForgetPassword";
 import { Route, Routes } from "react-router";
 import VerifyForgetPassword from "./pages/auth/VerifyForgetPassword";
+import PrivateRoute from "./components/PrivateRoute";
+import BlogList from "./pages/admin/blogs/List";
+import BlogEdit from "./pages/admin/blogs/Edit";
+import MyBlogs from "./pages/admin/blogs/MyBlogs";
+import AddBlog from "./pages/admin/blogs/Add";
 
 const App = () => {
   return (
@@ -27,9 +32,70 @@ const App = () => {
           <Route path="verify-forget-password" element={<VerifyForgetPassword/>}/>
         </Route>
         <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<AdminDashboard />} />
-          <Route path="users" element={<UserList />} />
-          <Route path="users/:id" element={<UserEdit />} />
+          <Route
+            index
+            element={
+              <PrivateRoute roles={["admin", "user"]}>
+                <AdminDashboard />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="my-blogs"
+            element={
+              <PrivateRoute roles={["admin", "user"]}>
+                <MyBlogs />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="add-blog"
+            element={
+              <PrivateRoute roles={["admin", "user"]}>
+                <AddBlog />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="blogs"
+            element={
+              <PrivateRoute roles={["admin", "user"]}>
+                <BlogList />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="blogs/:slug"
+            element={
+              <PrivateRoute roles={["admin", "user"]}>
+                <BlogEdit />
+              </PrivateRoute>
+            }
+          />
+          {/* <Route
+            path="profile"
+            element={
+              <PrivateRoute roles={["admin", "user"]}>
+                <Profile />
+              </PrivateRoute>
+            }
+          /> */}
+          {/* <Route
+            path="users"
+            element={
+              <PrivateRoute roles={["admin"]}>
+                <UserList />
+              </PrivateRoute>
+            }
+          /> */}
+          {/* <Route
+            path="users/:id"
+            element={
+              <PrivateRoute roles={["admin"]}>
+                <UserEdit />
+              </PrivateRoute>
+            }
+          /> */}
           <Route path="*" element={<ErrorPage link="/admin" />} />
         </Route>
         <Route path="/" element={<AppLayout />}>

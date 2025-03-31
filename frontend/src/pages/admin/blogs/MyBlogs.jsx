@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { BiTrash } from "react-icons/bi";
 
 import {
-  listBlogs,
+  getMyBlogs,
   updateStatusBySlug,
   removeBySlug,
   setCurrentPage,
@@ -40,7 +40,7 @@ const BlogList = () => {
   };
 
   const initFetch = useCallback(() => {
-    dispatch(listBlogs({ page: currentPage, limit }));
+    dispatch(getMyBlogs({ page: currentPage, limit }));
   }, [dispatch, currentPage, limit]);
 
   useEffect(() => {
@@ -98,7 +98,6 @@ const BlogList = () => {
           </tbody>
         </Table>
       )}
-
       <div className="d-flex justify-content-center">
         <Paginate
           //blogs, currentPage, limit
