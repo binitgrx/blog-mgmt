@@ -17,12 +17,15 @@ import BlogList from "./pages/admin/blogs/List";
 import BlogEdit from "./pages/admin/blogs/Edit";
 import MyBlogs from "./pages/admin/blogs/MyBlogs";
 import AddBlog from "./pages/admin/blogs/Add";
+import Bookmarks from "./pages/blogs/Bookmarks";
+import Blogs from "./pages/blogs/Blogs";
+import Blog from "./pages/blogs/Blog";
+
 
 const App = () => {
   return (
     <>
       <Routes>
-        <Route index element={<Home />} />
         <Route path="/auth">
           <Route index element={<Login />} />
           <Route path="forget-password" element={<ForgetPassword />} />
@@ -100,6 +103,9 @@ const App = () => {
         </Route>
         <Route path="/" element={<AppLayout />}>
           <Route index element={<Home />} />
+          <Route path="bookmarks" element={<Bookmarks />} />
+          <Route path="blogs" element={<Blogs />} />
+          <Route path="blogs/:slug" element={<Blog />} />
         </Route>
         <Route path="*" element={<ErrorPage />} />
       </Routes>
