@@ -78,7 +78,7 @@ const getProfile = async (currentUser) => {
     .select("-password -token -roles");
 };
 
-const list = async (search, page = 1, limit = 10) => {
+const list = async ({ search, page = 1, limit = 10 }) => {
   // OFFSet Pagination
   // const start = (+page - 1) * +limit;
   // return userModel.find().skip(start).limit(+limit);

@@ -41,12 +41,9 @@ const AdminNavbar = () => {
           className="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary vh-100"
           style={{ maxWidth: "310px", width: "310px" }}
         >
-          <a
-            href="/"
-            className="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none"
-          >
-            <span className="fs-4">Sidebar</span>
-          </a>
+          <Link to="/" className="navbar-brand fw-bold">
+            <img src="auth/logo.png" width={"auto"} height={30} />
+          </Link>
           <hr />
           <ul className="nav nav-pills flex-column mb-auto">
             {navLinks.map((link, idx) => (

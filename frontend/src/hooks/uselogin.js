@@ -17,16 +17,30 @@ export const useLogin = ({ setPayload }) => {
       setIsLoading(true);
       setIsDisabled(true);
       setErr("");
+  
       const { data } = await instance.post(URLS.LOGIN, payload);
+  
+      // Store token and user details
       setToken(data.data.accessToken);
       setItem(
         "currentUser",
-        JSON.stringify({ name: data?.data?.name, email: data?.data?.email })
+        JSON.stringify({
+          name: data?.data?.name,
+          email: data?.data?.email,
+          role: data?.data?.role, // Ensure role is stored
+        })
       );
+  
       setMsg(data?.msg);
+  
       setTimeout(() => {
         setMsg("");
-        navigate("/admin");
+        // Check the role and navigate accordingly
+        if (data?.data?.role === "admin") {
+          navigate("/admin");
+        } else {
+          navigate("/");
+        }
       }, 2000);
     } catch (e) {
       const err = e?.response?.data?.msg || "Something went wrong!";
@@ -37,5 +51,6 @@ export const useLogin = ({ setPayload }) => {
       setIsDisabled(false);
     }
   };
+  
   return { isDisabled, isLoading, msg, err, handleSubmit };
 };

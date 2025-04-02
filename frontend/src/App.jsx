@@ -4,7 +4,7 @@ import AppLayout from "./layouts/AppLayout";
 
 import ErrorPage from "./pages/Error";
 import Home from "./pages/Home";
-import Login from "./pages/auth/login";
+import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import EmailVerification from "./pages/auth/EmailVerification";
 import UserEdit from "./pages/admin/users/Edit";
@@ -83,22 +83,22 @@ const App = () => {
               </PrivateRoute>
             }
           /> */}
-          {/* <Route
+          <Route
             path="users"
             element={
               <PrivateRoute roles={["admin"]}>
                 <UserList />
               </PrivateRoute>
             }
-          /> */}
-          {/* <Route
+          />
+          <Route
             path="users/:id"
             element={
               <PrivateRoute roles={["admin"]}>
                 <UserEdit />
               </PrivateRoute>
             }
-          /> */}
+          />
           <Route path="*" element={<ErrorPage link="/admin" />} />
         </Route>
         <Route path="/" element={<AppLayout />}>

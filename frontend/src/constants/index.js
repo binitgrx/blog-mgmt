@@ -11,4 +11,5 @@ export const URLS = {
   VERIFY_FORGET_PASSWORD: API_URL + "/users/verify-fp",
   GET_PUBLISHED_BLOGS: API_URL + "/blogs/published",
   BLOGS: API_URL + "/blogs",
+  USERS: API_URL + "/users",
 };

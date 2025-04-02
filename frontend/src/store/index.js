@@ -15,6 +15,7 @@ import autoMergeLevel2 from "redux-persist/lib/stateReconciler/autoMergeLevel2";
 
 import { blogReducer } from "../slices/blogSlice";
 import { bookmarkReducer } from "../slices/bookmarkSlice";
+import { userReducer } from "../slices/userSlice";
 
 const persistConfig = {
   key: "blog-bookmark",
@@ -29,6 +30,7 @@ export const store = configureStore({
   reducer: {
     bookmark: persistBookmark,
     blogs: blogReducer,
+    users: userReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
