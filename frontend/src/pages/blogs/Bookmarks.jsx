@@ -23,8 +23,7 @@ const Bookmarks = () => {
       confirmButtonText: "Yes, delete it!",
     });
     if (result.isConfirmed) {
-      // logic
-      dispatch(removeAll());
+     dispatch(removeAll());
       Swal.fire({
         title: "Deleted!",
         text: "Your bookmarks have been deleted.",

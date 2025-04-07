@@ -1,7 +1,44 @@
 import { Container, Button, Row, Col, Card } from "react-bootstrap";
 import "./Home.css";
+import { useCallback, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router";
 
-function Home() {
+import {
+  listBlogs,
+  setCurrentPage,
+  setLimit,
+} from "../slices/blogSlice";
+
+import AlertBox from "../components/AlertBox";
+import { TableLoading } from "../components/SkeletalLoading";
+import Paginate from "../components/Paginate";
+import ToastBox from "../components/Toast";
+import ImageWithFallback from "../components/ImageWithFallback";
+
+const Home = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { blogs, currentPage, error, limit, loading, total } = useSelector(
+    (state) => state.blogs
+  );
+
+  const handleCurrentPage = (num) => {
+    dispatch(setCurrentPage(num));
+  };
+
+  const handleLimit = (num) => {
+    dispatch(setLimit(num));
+  };
+
+  const initFetch = useCallback(() => {
+    dispatch(listBlogs({ page: currentPage, limit }));
+  }, [dispatch, currentPage, limit]);
+
+  useEffect(() => {
+    initFetch();
+  }, [initFetch]);
+
   return (
     <>
       <div className="app">
@@ -10,22 +47,15 @@ function Home() {
             <Row className="align-items-center">
               <Col lg={6} className="pe-lg-5">
                 <h1 className="display-4 fw-bold mb-3">
-                  Mundana is an HTML Bootstrap Template for Professional
-                  Blogging
+                Manage and Discover Blogs with Ease
                 </h1>
                 <p className="lead text-muted mb-4">
-                  Beautifully crafted with the latest technologies, SASS &
-                  Bootstrap 4.1.3, Mundana is the perfect design for your
-                  professional blog. Homepage, post article and category layouts
-                  available.
+                This powerful blog management platform lets you create, edit, publish, and explore a wide range of insightful blog posts. Whether you're an author or a reader, everything you need is right here.
                 </p>
-                <Button variant="dark" className="px-4 rounded-1">
-                  Read More
-                </Button>
               </Col>
               <Col lg={6}>
                 <img
-                  src="https://picsum.photos/800/600"
+                  src="https://picsum.photos/id/1/800/400"
                   alt="Hero"
                   className="img-fluid rounded"
                 />
@@ -37,88 +67,44 @@ function Home() {
         <Container className="py-5">
           <Row>
             <Col lg={8}>
-              <Card className="border-0 mb-5">
-                <Card.Img
-                  variant="top"
-                  src="https://picsum.photos/800/400"
-                  className="rounded"
-                />
-                <Card.Body className="px-0">
-                  <div className="mb-1">
-                    <small className="text-muted">
-                      Favid Rick · Dec 12 · 5 min read
-                    </small>
-                  </div>
-                  <h2 className="h3 fw-bold">
-                    Brain Stimulation Relieves Depression Symptoms
-                  </h2>
-                  <p className="text-muted">
-                    Researchers have found an effective target in the brain for
-                    electrical stimulation to improve mood in people suffering
-                    from depression.
-                  </p>
-                </Card.Body>
-              </Card>
+              {error && <ToastBox msg={error} />}
+              {loading && blogs.length === 0 && (
+                <TableLoading tableHeaders={["title", "Author", "Status"]} />
+              )}
+              {!loading && blogs.length === 0 && <AlertBox label="No blogs found." />}
 
-              <h5 className="mb-4">All Stories</h5>
+              <h5 className="mb-4">Featured Blogs</h5>
 
-              {[
-                "Nearly 200 Great Barrier Reef coral species also live in the deep sea",
-                "East Antarcticas glaciers are stirring",
-                "50 years ago, armadillos hinted that DNA wasnt destiny",
-              ].map((title, idx) => (
-                <article key={idx} className="mb-4">
-                  <Row className="align-items-center">
-                    <Col md={8}>
-                      <h2 className="h5 fw-bold mb-1">{title}</h2>
-                      <p className="text-muted mb-2">
-                        There are more coral species lurking in the deep ocean
-                        than previously thought.
-                      </p>
-                      <small className="text-muted">
-                        Jake Bittle in SCIENCE · Dec 12 · 5 min read
-                      </small>
-                    </Col>
-                    <Col md={4}>
-                      <img
-                        src={`https://picsum.photos/400/300?random=${idx}`}
-                        alt={title}
-                        className="img-fluid rounded"
-                      />
-                    </Col>
-                  </Row>
-                </article>
-              ))}
-            </Col>
-
-            <Col lg={4}>
-              <div className="ps-lg-4">
-                <h5 className="mb-4">Popular</h5>
-                {[
-                  "Did Supernovae Kill Off Large Ocean Animals?",
-                  "Humans Reversing Climate Clock: 50 Million Years",
-                  "Unprecedented Views of the Birth of Planets",
-                  "Effective New Target for Mood-Boosting Brain Stimulation Found",
-                ].map((title, idx) => (
-                  <div key={idx} className="d-flex mb-4">
-                    <span className="display-4 opacity-25 me-3 fw-bold">
-                      {String(idx + 1).padStart(2, "0")}
-                    </span>
-                    <div>
-                      <h6 className="mb-1 fw-bold">{title}</h6>
-                      <small className="text-muted">
-                        Jake Bittle in SCIENCE
-                      </small>
-                    </div>
-                  </div>
+              {!loading &&
+                blogs.map((blog, idx) => (
+                  <article key={blog._id} className="mb-4" onClick={() => navigate(`/blogs/${blog.slug}`)} style={{ cursor: "pointer" }}>
+                    <Row className="align-items-center">
+                      <Col md={8}>
+                        <h2 className="h5 fw-bold mb-1">{blog.title}</h2>
+                        <p className="text-muted mb-2">
+                          {(blog.content || "").slice(0, 100)}...
+                        </p>
+                        <small className="text-muted">
+                          {blog.author?.name} · {blog.readDuration || "5"} min read
+                        </small>
+                      </Col>
+                      <Col md={4}>
+                        <ImageWithFallback
+                          src={blog.image || `https://picsum.photos/400/300?random=${idx}`}
+                          alt={blog.title}
+                          className="img-fluid rounded"
+                        />
+                      </Col>
+                    </Row>
+                  </article>
                 ))}
-              </div>
+
             </Col>
           </Row>
         </Container>
       </div>
     </>
   );
-}
+};
 
 export default Home;

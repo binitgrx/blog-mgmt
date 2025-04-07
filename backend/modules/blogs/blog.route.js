@@ -17,7 +17,7 @@ router.get("/published", async (req, res, next) => {
   }
 });
 
-router.get("/", secureAPI(["admin"]), async (req, res, next) => {
+router.get("/", secureAPI(["admin","user"]), async (req, res, next) => {
   try {
     const { title, status, page, limit } = req.query;
     const search = { title, status };

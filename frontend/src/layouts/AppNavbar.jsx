@@ -44,7 +44,7 @@ const AppNavbar = () => {
               <Button
                 variant="outline-success"
                 size="sm"
-                onClick={() => navigate("/admin")}
+                onClick={() => navigate("/admin/my-blogs")}
               >
                 Welcome {name}
               </Button>

@@ -2,16 +2,17 @@ import { useCallback, useEffect } from "react";
 import { Link } from "react-router";
 import { Form, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { BiTrash } from "react-icons/bi";
-
+import { ImBlocked } from "react-icons/im";
 import {
-  listUsers
+  listUsers,
+  userBlock
 } from "../../../slices/userSlice";
 
 import AlertBox from "../../../components/AlertBox";
 import { TableLoading } from "../../../components/SkeletalLoading";
 import Paginate from "../../../components/Paginate";
 import ToastBox from "../../../components/Toast";
+import Swal from "sweetalert2";
 
 const UserList = () => {
   const dispatch = useDispatch();
@@ -31,13 +32,35 @@ const UserList = () => {
     dispatch(setLimit(num));
   };
 
-  // const handleRemove = (blog) => {
-  //   dispatch(removeBySlug(blog?.slug));
-  // };
+  const handleRemove = (blog) => {
+    dispatch(removeBySlug(blog?.slug));
+  };
 
   const initFetch = useCallback(() => {
     dispatch(listUsers({ page: currentPage, limit }));
   }, [dispatch, currentPage, limit]);
+
+   const handleBlock = async (user) => {
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, block it!",
+      });
+      if (result.isConfirmed) {
+        // logic
+        dispatch(userBlock(user?._id));
+        Swal.fire({
+          title: "Deleted!",
+          text: "User have been Blocked.",
+          icon: "success",
+        });
+      }
+    };
+  
 
   useEffect(() => {
     initFetch();
@@ -79,7 +102,7 @@ const UserList = () => {
                   {user?.roles}
                 </td>
                 <td>
-                  <BiTrash color="red" onClick={() => handleRemove(user)} />
+                  <ImBlocked color="red" onClick={() => handleBlock(user)} />
                 </td>
               </tr>
             ))}

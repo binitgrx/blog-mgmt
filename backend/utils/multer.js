@@ -1,6 +1,6 @@
 const multer = require("multer");
 
-const storage = (storageLocation = "") => {
+const storage = (storageLocation = "public/user") => {
   return multer.diskStorage({
     destination: (req, file, cb) => {
       cb(null, storageLocation);

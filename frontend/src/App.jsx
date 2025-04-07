@@ -20,7 +20,7 @@ import AddBlog from "./pages/admin/blogs/Add";
 import Bookmarks from "./pages/blogs/Bookmarks";
 import Blogs from "./pages/blogs/Blogs";
 import Blog from "./pages/blogs/Blog";
-
+import GetProfile from "./pages/admin/users/Profile";
 
 const App = () => {
   return (
@@ -75,14 +75,14 @@ const App = () => {
               </PrivateRoute>
             }
           />
-          {/* <Route
+          <Route
             path="profile"
             element={
               <PrivateRoute roles={["admin", "user"]}>
-                <Profile />
+                <GetProfile />
               </PrivateRoute>
             }
-          /> */}
+          />
           <Route
             path="users"
             element={

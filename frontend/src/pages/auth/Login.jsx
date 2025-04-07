@@ -72,6 +72,7 @@ const Login = () => {
               </div>
               <div className="d-grid">
                 <CustomButton
+                  type="submit"
                   variant="primary"
                   label="Submit"
                   loading={isLoading}

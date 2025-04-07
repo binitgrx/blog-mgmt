@@ -73,7 +73,7 @@ const Blogs = () => {
                         <Card.Title>{post.title}</Card.Title>
                         <div
                           onClick={(e) => {
-                            e.stopPropagation(); // Prevent the click from triggering parent onClick
+                            e.stopPropagation(); 
                             dispatch(addBookmark(post));
                           }}
                           style={{ cursor: "pointer" }}

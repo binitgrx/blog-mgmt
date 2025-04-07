@@ -8,7 +8,7 @@ import { getDecodedTokenInfo } from "../utils/routeGuard";
 import { AvatarComponent } from "avatar-initials";
 
 const adminRoutes = [
-  { label: "Home", url: "/admin", roles: ["user", "admin"] },
+  // { label: "Home", url: "/admin", roles: ["user", "admin"] },
   { label: "My Blogs", url: "/admin/my-blogs", roles: ["user", "admin"] },
   { label: "Blogs", url: "/admin/blogs", roles: ["admin"] },
   { label: "Users", url: "/admin/users", roles: ["admin"] },
@@ -42,7 +42,7 @@ const AdminNavbar = () => {
           style={{ maxWidth: "310px", width: "310px" }}
         >
           <Link to="/" className="navbar-brand fw-bold">
-            <img src="auth/logo.png" width={"auto"} height={30} />
+            <img src="/auth/logo.png" width={"auto"} height={30} />
           </Link>
           <hr />
           <ul className="nav nav-pills flex-column mb-auto">

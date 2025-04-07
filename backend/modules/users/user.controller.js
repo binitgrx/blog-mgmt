@@ -18,6 +18,8 @@ const blockUser = async (id) => {
 const changePassword = async (request) => {
   const { currentUser, body } = request;
   // user check
+  console.log("Current user", currentUser);
+  console.log("Body", body);
   const user = await userModel.findById({
     _id: currentUser,
     isEmailVerified: true,
@@ -25,6 +27,8 @@ const changePassword = async (request) => {
   });
   if (!user) throw new Error("User not found");
   // compare pw with user
+  console.log("User password", user?.password);
+  console.log("Body password", body?.oldPassword);
   const isValidPw = comparePassword(body?.oldPassword, user?.password);
   if (!isValidPw) throw new Error("Password mismatch");
   // gen hash of new pw
@@ -79,11 +83,13 @@ const getProfile = async (currentUser) => {
 };
 
 const list = async ({ search, page = 1, limit = 10 }) => {
-  // OFFSet Pagination
-  // const start = (+page - 1) * +limit;
-  // return userModel.find().skip(start).limit(+limit);
-  const query = []; // pipeline
-  // Search
+ 
+  const query = []; 
+  
+  query.push({
+    $match: { isActive: true },
+  });
+
   if (search?.name) {
     query.push({
       $match: {
@@ -142,6 +148,7 @@ const list = async ({ search, page = 1, limit = 10 }) => {
 
 const login = async (payload) => {
   const { email, password } = payload;
+  console.log("Login payload", payload);
   const user = await userModel.findOne({
     email,
   });
@@ -217,6 +224,7 @@ const resetPassword = async (payload) => {
 };
 
 const updateRole = async (id, payload) => {
+  console.log("Update role payload", payload,id);
   const user = await userModel.findOne({ _id: id });
   if (!user) throw new Error("User not found");
   const { roles } = payload;
